@@ -1,7 +1,0 @@
-C:\Users\Marcin\source\repos\TSP Genetic .NET\TSP Genetic .NET\bin\Debug\TSP_Genetic.NET.exe.config
-C:\Users\Marcin\source\repos\TSP Genetic .NET\TSP Genetic .NET\bin\Debug\TSP_Genetic.NET.exe
-C:\Users\Marcin\source\repos\TSP Genetic .NET\TSP Genetic .NET\bin\Debug\TSP_Genetic.NET.pdb
-C:\Users\Marcin\source\repos\TSP Genetic .NET\TSP Genetic .NET\obj\Debug\TSP Genetic .NET.csprojAssemblyReference.cache
-C:\Users\Marcin\source\repos\TSP Genetic .NET\TSP Genetic .NET\obj\Debug\TSP Genetic .NET.csproj.CoreCompileInputs.cache
-C:\Users\Marcin\source\repos\TSP Genetic .NET\TSP Genetic .NET\obj\Debug\TSP_Genetic.NET.exe
-C:\Users\Marcin\source\repos\TSP Genetic .NET\TSP Genetic .NET\obj\Debug\TSP_Genetic.NET.pdb
