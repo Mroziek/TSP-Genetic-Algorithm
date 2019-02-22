@@ -1,6 +1,0 @@
-C:\Users\Marcin\source\repos\TSPGenetic\TSPGenetic\obj\Debug\TSPGenetic.csprojAssemblyReference.cache
-C:\Users\Marcin\source\repos\TSPGenetic\TSPGenetic\obj\Debug\TSPGenetic.csproj.CoreCompileInputs.cache
-C:\Users\Marcin\source\repos\TSPGenetic\TSPGenetic\bin\Debug\TSPGenetic.exe
-C:\Users\Marcin\source\repos\TSPGenetic\TSPGenetic\bin\Debug\TSPGenetic.pdb
-C:\Users\Marcin\source\repos\TSPGenetic\TSPGenetic\obj\Debug\TSPGenetic.exe
-C:\Users\Marcin\source\repos\TSPGenetic\TSPGenetic\obj\Debug\TSPGenetic.pdb
