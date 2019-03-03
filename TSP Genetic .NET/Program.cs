@@ -13,29 +13,23 @@ namespace TSP_Genetic.NET
         public static int numberOfCities = FileReaderDistances.NumberOfCities(filePath);
         public static Random r = new Random();
 
-
         static void Main(string[] args)
         {
-            int individualsInGeneration = 50;
-            int mutationChance = 30;
-            int crossoverChance = 50;
+            int individualsInGeneration = 100;
+            int mutationChance = 50;
+            int crossoverChance = 40;
             int numberOfLoops = 100000;
 
-
             Population population = new Population(individualsInGeneration, numberOfCities);
-            //population.PrintPopulation();
 
             for (int i = 0; i < numberOfLoops; i++)
             {
-                population.Crossover(crossoverChance);
+                population.CrossoverPopulation(crossoverChance);
                 population.Mutation(mutationChance);
                 population.TournamentSelection();
+                //population.RouletteSelection();
 
-                if (population.BestPathRefresh())
-                {
-                    Console.WriteLine(population.lengthofBestPath + " w pętli nr: " + i);
-                    //population.PrintPopulation();
-                }
+                if (i % 10000 == 0) Console.WriteLine("Loop: " + i);
             }
             Console.ReadLine();
 

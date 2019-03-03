@@ -6,20 +6,23 @@ using System.Threading.Tasks;
 
 namespace TSP_Genetic.NET
 {
-   public class Path
+    public class Path
     {
-        public int[] PathCities;       
+        public int[] PathCities;
 
         public Path(int numberOfCities)
         {
             PathCities = new int[numberOfCities];
+        }
 
-            bool[] isDrawn = new bool[numberOfCities];
+        public void GenerateRandomPath()
+        {
+            bool[] isDrawn = new bool[PathCities.Length];
             int randomCity;
 
-            for (int n = 0; n < numberOfCities;)
+            for (int n = 0; n < PathCities.Length;)
             {
-                randomCity = Program.r.Next(0, numberOfCities);
+                randomCity = Program.r.Next(0, PathCities.Length);
 
                 if (isDrawn[randomCity] == false)
                 {
@@ -29,13 +32,6 @@ namespace TSP_Genetic.NET
                 }
             }
         }
-
-        public Path(int[] cities)
-        {
-            PathCities = cities;
-        }
-
-        public Path Copy() => new Path(PathCities);     
 
         public int CalculateFitness()
         {
@@ -54,16 +50,16 @@ namespace TSP_Genetic.NET
         {
             foreach (int city in PathCities)
             {
-                Console.Write(city+"-");
+                Console.Write(city + "-");
             }
             Console.Write(CalculateFitness());
         }
 
         public void MutatePath()
         {
-            int gen1 = Program.r.Next(0, Program.numberOfCities);
-            int gen2 = Program.r.Next(0, Program.numberOfCities);
-          
+            int gen1 = Program.r.Next(0, PathCities.Length);
+            int gen2 = Program.r.Next(0, PathCities.Length);
+
             if (gen1 > gen2)
             {
                 int foo = gen2;
@@ -71,21 +67,20 @@ namespace TSP_Genetic.NET
                 gen1 = foo;
             }
 
-            int[] tab1 = new int[gen2 - gen1];
+            int[] arr1 = new int[gen2 - gen1];
 
             for (int p = gen1, x = 0; p < gen2; p++, x++)
             {
-                tab1[x] = PathCities[p];
+                arr1[x] = PathCities[p];
             }
 
-            Array.Reverse(tab1);
+            Array.Reverse(arr1);
 
             for (int p = gen1, x = 0; p < gen2; p++, x++)
             {
-                PathCities[p] = tab1[x];
+                PathCities[p] = arr1[x];
             }
-
         }
     }
 }
-    
+

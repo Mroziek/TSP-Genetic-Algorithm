@@ -14,7 +14,7 @@ namespace TSP_Genetic.NET
             String[] lines = File.ReadAllLines(filePath);
 
             int size = int.Parse(lines[0]);
-            int[,] TabDistances = new int[size, size];
+            int[,] distancesArray = new int[size, size];
 
             int x = 0;
 
@@ -27,15 +27,14 @@ namespace TSP_Genetic.NET
                     for (int i = 0; i < row.Length; i++)
                     {
                         int value = int.Parse(row[i]);
-                        TabDistances[x, i] = value;
-                        TabDistances[i, x] = value;
+                        distancesArray[x, i] = value;
+                        distancesArray[i, x] = value;
                     }
                     x++;
                 }
             }
-            return TabDistances;
+            return distancesArray;
         }
-
         public static int NumberOfCities(String filePath)
         {
             String[] lines = File.ReadAllLines(filePath);

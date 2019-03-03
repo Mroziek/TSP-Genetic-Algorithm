@@ -22,10 +22,12 @@ namespace TSP_Genetic.NET
             for (int i = 0; i < numberOfPaths; ++i)
             {
                 PopulationArray[i] = new Path(numberOfCities);
+                PopulationArray[i].GenerateRandomPath();
             }
 
             this.numberOfPaths = numberOfPaths;
             this.numberOfCities = numberOfCities;
+            bestPathInPopulation = new Path(numberOfCities);
         }
 
 
@@ -40,81 +42,95 @@ namespace TSP_Genetic.NET
         }
 
 
-        public void Crossover(int crossoverChance)
+        public void CrossoverPopulation(int crossoverChance)
         {
             Path[] newPopulationArray = new Path[numberOfPaths];
-
-            for (int k = 0; k < numberOfPaths; k++)
+            for (int i = 0; i < numberOfPaths; ++i)
             {
-                var winner = PopulationArray[k].Copy();
-                newPopulationArray[k] = winner.Copy();
+                newPopulationArray[i] = new Path(numberOfCities);
+            }
 
-                if (Program.r.Next(0, 100) < crossoverChance)
+            for (int k = 0; k < PopulationArray.Length; k++)
+            {
+                int individual1 = k;
+                int individual2 = Program.r.Next(0, numberOfPaths);
+
+                //newPopulationArray[k].PathCities=CrossoverPaths(PopulationArray[individual1].PathCities, PopulationArray[individual2].PathCities);
+                // Array.Copy(CrossoverPaths(PopulationArray[individual1].PathCities, PopulationArray[individual2].PathCities), newPopulationArray[k].PathCities, newPopulationArray[k].PathCities.Length);
+
+                if (Program.r.Next(0, 100) < crossoverChance && !PopulationArray[individual1].PathCities.SequenceEqual(PopulationArray[individual2].PathCities))
                 {
-                    int individual1 = Program.r.Next(0, numberOfPaths);
-                    int individual2 = Program.r.Next(0, numberOfPaths);
+                    //PopulationArray[k].PrintPath();
+                    //Console.WriteLine();
+                    //newPopulationArray[k].PrintPath();
+                    //Console.WriteLine();
+                    Array.Copy(CrossoverPaths(PopulationArray[individual1].PathCities, PopulationArray[individual2].PathCities), newPopulationArray[k].PathCities, newPopulationArray[k].PathCities.Length);
+                    //newPopulationArray[k].PrintPath();
+                    //Console.WriteLine("xd");
+                    //Console.ReadKey();
 
-                    int gen1 = r.Next(0, numberOfCities);
-                    int gen2 = r.Next(0, numberOfCities);
+                }
 
-                    if (gen1 > gen2)
-                    {
-                        int foo1 = gen2;
-                        gen2 = gen1;
-                        gen1 = foo1;
-                    }
-
-                    int[] array1 = new int[gen2 - gen1];
-                    int[] newPath1 = new int[numberOfCities];
-
-                    for (int p = gen1, x = 0; p < gen2; p++, x++)
-                    {
-                        array1[x] = PopulationArray[individual1].PathCities[p];
-                    }
-
-                    for (int p = 0; p < numberOfCities; p++)
-                    {
-                        newPath1[p] = -1;
-                    }
-
-                    for (int p = gen1; p < gen2; p++)
-                    {
-                        newPath1[p] = PopulationArray[individual1].PathCities[p];
-                    }
-
-                    int foo3 = 0;
-                    for (int p = 0; p < numberOfCities;)
-                    {
-                        if (newPath1[p] == -1)
-                        {
-                            if (!array1.Contains(PopulationArray[individual2].PathCities[foo3]))
-                            {
-                                newPath1[p] = PopulationArray[individual2].PathCities[foo3];
-                                p++;
-                            }
-                            foo3++;
-                        }
-                        else p++;
-                    }
-
-                    for (int p = 0; p < numberOfCities; p++)
-                    {
-                        newPopulationArray[k].PathCities[p] = newPath1[p];
-                    }
-                }                             
+                else
+                {
+                    Array.Copy(PopulationArray[k].PathCities, newPopulationArray[k].PathCities, PopulationArray[k].PathCities.Length);
+                }
             }
 
-            for (int k = 0; k < numberOfPaths; k++)
-            {                
-                var winner = newPopulationArray[k].Copy();
-                PopulationArray[k] = winner.Copy();
+            Array.Copy(newPopulationArray, PopulationArray, newPopulationArray.Length);
+        }
+
+        int[] CrossoverPaths(int[] sciezka1, int[] sciezka2)
+        {
+            int poz1 = r.Next(0, sciezka1.Length);
+            int poz2 = r.Next(0, sciezka1.Length);
+
+            if (poz1 > poz2)
+            {
+                int pomocniczy = poz2;
+                poz2 = poz1;
+                poz1 = pomocniczy;
             }
+
+            int[] tablicaPomoc = new int[poz2 - poz1];
+            int[] nowaSciezka = new int[sciezka1.Length];
+
+            for (int p = poz1, x = 0; p < poz2; p++, x++)
+            {
+                tablicaPomoc[x] = sciezka1[p];
+            }
+
+            for (int p = 0; p < sciezka1.Length; p++)
+            {
+                nowaSciezka[p] = -1;
+            }
+
+            for (int p = poz1; p < poz2; p++)
+            {
+                nowaSciezka[p] = sciezka1[p];
+            }
+
+            int pomocnicza = 0;
+            for (int p = 0; p < sciezka1.Length;)
+            {
+                if (nowaSciezka[p] == -1)
+                {
+                    if (!tablicaPomoc.Contains(sciezka2[pomocnicza]))
+                    {
+                        nowaSciezka[p] = sciezka2[pomocnicza];
+                        p++;
+                    }
+                    pomocnicza++;
+                }
+                else p++;
+            }
+            return nowaSciezka;
         }
 
 
         public void Mutation(int mutationChance)
         {
-            for (int k = 0; k < 30; k++)
+            for (int k = 0; k < PopulationArray.Length; k++)
             {
                 if (Program.r.Next(0, 100) < mutationChance)
                 {
@@ -127,55 +143,91 @@ namespace TSP_Genetic.NET
         public void TournamentSelection()
         {
             Path[] newPopulationArray = new Path[numberOfPaths];
+            for (int i = 0; i < numberOfPaths; ++i)
+            {
+                newPopulationArray[i] = new Path(numberOfCities);
+            }
+
+            int[] fitnessArray = new int[numberOfPaths];
+
+            for (int k = 0; k < numberOfPaths; k++)
+            {
+                fitnessArray[k] = PopulationArray[k].CalculateFitness();
+                if (fitnessArray[k] < lengthofBestPath)
+                {
+                    PopulationArray[k].PrintPath();
+                    Array.Copy(PopulationArray[k].PathCities, bestPathInPopulation.PathCities, PopulationArray[k].PathCities.Length);
+                    lengthofBestPath = fitnessArray[k];
+                    Console.WriteLine();
+                    //Console.WriteLine(lengthofBestPath);
+                }
+            }
 
             for (int k = 0; k < numberOfPaths; k++)
             {
                 int tournamentWinner;
-                var winner = PopulationArray[k].Copy();
-                newPopulationArray[k] = winner.Copy();
 
                 int individual1 = r.Next(0, numberOfPaths);
                 int individual2 = r.Next(0, numberOfPaths);
                 int individual3 = r.Next(0, numberOfPaths);
 
-                int sumDistancePath1 = PopulationArray[individual1].CalculateFitness();
-                int sumDistancePath2 = PopulationArray[individual2].CalculateFitness();
-                int sumDistancePath3 = PopulationArray[individual3].CalculateFitness();
+                int sumDistancePath1 = fitnessArray[individual1];
+                int sumDistancePath2 = fitnessArray[individual2];
+                int sumDistancePath3 = fitnessArray[individual3];
 
                 if (sumDistancePath1 <= sumDistancePath2 && sumDistancePath1 <= sumDistancePath3) tournamentWinner = individual1;
                 else if (sumDistancePath2 <= sumDistancePath1 && sumDistancePath2 <= sumDistancePath3) tournamentWinner = individual2;
                 else tournamentWinner = individual3;
 
-                for (int p = 0; p < numberOfCities; p++)
-                {
-                    newPopulationArray[k].PathCities[p] = PopulationArray[tournamentWinner].PathCities[p];
-                }        
+                Array.Copy(PopulationArray[tournamentWinner].PathCities, newPopulationArray[k].PathCities, PopulationArray[k].PathCities.Length);
             }
 
-            for (int k = 0; k < numberOfPaths; k++)
-            {
-                for (int p = 0; p < numberOfCities; p++)
-                {
-                    PopulationArray[k].PathCities[p] = newPopulationArray[k].PathCities[p];
-                }
-            }
-            
+            Array.Copy(newPopulationArray, PopulationArray, newPopulationArray.Length);
         }
 
-
-        public bool BestPathRefresh()
+        public void RouletteSelection()
         {
-            bool newBestPathFound = false;
+            Path[] newPopulationArray = new Path[numberOfPaths];
+            for (int i = 0; i < numberOfPaths; ++i)
+            {
+                newPopulationArray[i] = new Path(numberOfCities);
+            }
+
+            double[] fitnessArray = new double[numberOfPaths];
+            double fitnessSum = 0;
+
             for (int k = 0; k < numberOfPaths; k++)
             {
-                if (PopulationArray[k].CalculateFitness() < lengthofBestPath)
+                fitnessArray[k] = PopulationArray[k].CalculateFitness();
+                fitnessSum += fitnessArray[k];
+                if (fitnessArray[k] < lengthofBestPath)
                 {
-                    bestPathInPopulation=PopulationArray[k];
-                    lengthofBestPath = PopulationArray[k].CalculateFitness();
-                    newBestPathFound = true;
+                    PopulationArray[k].PrintPath();
+                    Array.Copy(PopulationArray[k].PathCities, bestPathInPopulation.PathCities, PopulationArray[k].PathCities.Length);
+                    lengthofBestPath = int.Parse(fitnessArray[k].ToString());
+                    Console.WriteLine();
+                    //Console.WriteLine(lengthofBestPath);
                 }
             }
-            return newBestPathFound;
+
+            for (int k = 0; k < numberOfPaths; k++)
+            {
+                fitnessArray[k] = (fitnessArray[k] / fitnessSum) * numberOfPaths * 100;
+            }
+
+            for (int k = 0; k < numberOfPaths;)
+            {
+                int chance = Program.r.Next(60, 100);
+                int randomed = Program.r.Next(0, numberOfPaths);
+
+                if (fitnessArray[randomed] < chance)
+                {
+                    Array.Copy(PopulationArray[randomed].PathCities, newPopulationArray[k].PathCities, PopulationArray[k].PathCities.Length);
+                    k++;
+                }
+
+            }
+            Array.Copy(newPopulationArray, PopulationArray, newPopulationArray.Length);
         }
 
     }
