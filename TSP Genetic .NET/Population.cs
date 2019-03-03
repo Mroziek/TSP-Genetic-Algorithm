@@ -55,20 +55,10 @@ namespace TSP_Genetic.NET
                 int individual1 = k;
                 int individual2 = Program.r.Next(0, numberOfPaths);
 
-                //newPopulationArray[k].PathCities=CrossoverPaths(PopulationArray[individual1].PathCities, PopulationArray[individual2].PathCities);
-                // Array.Copy(CrossoverPaths(PopulationArray[individual1].PathCities, PopulationArray[individual2].PathCities), newPopulationArray[k].PathCities, newPopulationArray[k].PathCities.Length);
-
                 if (Program.r.Next(0, 100) < crossoverChance && !PopulationArray[individual1].PathCities.SequenceEqual(PopulationArray[individual2].PathCities))
                 {
-                    //PopulationArray[k].PrintPath();
-                    //Console.WriteLine();
-                    //newPopulationArray[k].PrintPath();
-                    //Console.WriteLine();
-                    Array.Copy(CrossoverPaths(PopulationArray[individual1].PathCities, PopulationArray[individual2].PathCities), newPopulationArray[k].PathCities, newPopulationArray[k].PathCities.Length);
-                    //newPopulationArray[k].PrintPath();
-                    //Console.WriteLine("xd");
-                    //Console.ReadKey();
 
+                    Array.Copy(CrossoverPaths(PopulationArray[individual1].PathCities, PopulationArray[individual2].PathCities), newPopulationArray[k].PathCities, newPopulationArray[k].PathCities.Length);
                 }
 
                 else
@@ -80,51 +70,51 @@ namespace TSP_Genetic.NET
             Array.Copy(newPopulationArray, PopulationArray, newPopulationArray.Length);
         }
 
-        int[] CrossoverPaths(int[] sciezka1, int[] sciezka2)
+        int[] CrossoverPaths(int[] path1, int[] path2)
         {
-            int poz1 = r.Next(0, sciezka1.Length);
-            int poz2 = r.Next(0, sciezka1.Length);
+            int pos1 = r.Next(0, path1.Length);
+            int pos2 = r.Next(0, path1.Length);
 
-            if (poz1 > poz2)
+            if (pos1 > pos2)
             {
-                int pomocniczy = poz2;
-                poz2 = poz1;
-                poz1 = pomocniczy;
+                int foo1 = pos2;
+                pos2 = pos1;
+                pos1 = foo1;
             }
 
-            int[] tablicaPomoc = new int[poz2 - poz1];
-            int[] nowaSciezka = new int[sciezka1.Length];
+            int[] tab1 = new int[pos2 - pos1];
+            int[] newPath = new int[path1.Length];
 
-            for (int p = poz1, x = 0; p < poz2; p++, x++)
+            for (int p = pos1, x = 0; p < pos2; p++, x++)
             {
-                tablicaPomoc[x] = sciezka1[p];
+                tab1[x] = path1[p];
             }
 
-            for (int p = 0; p < sciezka1.Length; p++)
+            for (int p = 0; p < path1.Length; p++)
             {
-                nowaSciezka[p] = -1;
+                newPath[p] = -1;
             }
 
-            for (int p = poz1; p < poz2; p++)
+            for (int p = pos1; p < pos2; p++)
             {
-                nowaSciezka[p] = sciezka1[p];
+                newPath[p] = path1[p];
             }
 
-            int pomocnicza = 0;
-            for (int p = 0; p < sciezka1.Length;)
+            int foo = 0;
+            for (int p = 0; p < path1.Length;)
             {
-                if (nowaSciezka[p] == -1)
+                if (newPath[p] == -1)
                 {
-                    if (!tablicaPomoc.Contains(sciezka2[pomocnicza]))
+                    if (!tab1.Contains(path2[foo]))
                     {
-                        nowaSciezka[p] = sciezka2[pomocnicza];
+                        newPath[p] = path2[foo];
                         p++;
                     }
-                    pomocnicza++;
+                    foo++;
                 }
                 else p++;
             }
-            return nowaSciezka;
+            return newPath;
         }
 
 
@@ -140,7 +130,7 @@ namespace TSP_Genetic.NET
         }
 
 
-        public void TournamentSelection()
+        public void TournamentSelection(int startPrinting)
         {
             Path[] newPopulationArray = new Path[numberOfPaths];
             for (int i = 0; i < numberOfPaths; ++i)
@@ -155,11 +145,13 @@ namespace TSP_Genetic.NET
                 fitnessArray[k] = PopulationArray[k].CalculateFitness();
                 if (fitnessArray[k] < lengthofBestPath)
                 {
-                    PopulationArray[k].PrintPath();
+                    if (startPrinting > 5000)
+                    {
+                        PopulationArray[k].PrintPath();
+                    }
                     Array.Copy(PopulationArray[k].PathCities, bestPathInPopulation.PathCities, PopulationArray[k].PathCities.Length);
                     lengthofBestPath = fitnessArray[k];
                     Console.WriteLine();
-                    //Console.WriteLine(lengthofBestPath);
                 }
             }
 
@@ -206,7 +198,6 @@ namespace TSP_Genetic.NET
                     Array.Copy(PopulationArray[k].PathCities, bestPathInPopulation.PathCities, PopulationArray[k].PathCities.Length);
                     lengthofBestPath = int.Parse(fitnessArray[k].ToString());
                     Console.WriteLine();
-                    //Console.WriteLine(lengthofBestPath);
                 }
             }
 
